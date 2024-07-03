@@ -18,9 +18,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { PasswordInput } from "@/components/ui/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PersonStandingIcon } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -34,6 +36,7 @@ const formSchema = z.object({
 
 function LoginPage(props: Props) {
   const {} = props;
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -46,6 +49,7 @@ function LoginPage(props: Props) {
     // Do something with the form values.
     // ✅ This will be type-safe and validated.
     console.log(values);
+    router.push("/dashboard");
   }
 
   return (
@@ -85,22 +89,18 @@ function LoginPage(props: Props) {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input
-                        type="password"
-                        placeholder="Password"
-                        {...field}
-                      />
+                      <PasswordInput placeholder="Password" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
-              <Button type="submit">Submit</Button>
+              <Button type="submit">Login</Button>
             </form>
           </Form>
         </CardContent>
         <CardFooter className="justify-between">
-          <small>Don't hava an account?</small>
+          <small>Don't have an account?</small>
           <Button asChild variant={"outline"} size="sm">
             <Link href="/sign-up">Sign up</Link>
           </Button>
