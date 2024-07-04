@@ -15,7 +15,7 @@ interface Props {
 
 function LightDarkToggle(props: Props) {
   const { className } = props;
-  const [isDarkMode, setIsDarkMode] = useState(true);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   return (
     <TooltipProvider>

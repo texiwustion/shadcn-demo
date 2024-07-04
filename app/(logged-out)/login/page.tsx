@@ -20,17 +20,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { PasswordInput } from "@/components/ui/password-input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PersonStandingIcon } from "lucide-react";
+import { FolderKanbanIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
+import { baseUrl } from "@/lib/global";
 
 interface Props {}
 
 const formSchema = z.object({
-  email: z.string().email(),
+  name: z.string(),
   password: z.string(),
 });
 
@@ -40,43 +41,71 @@ function LoginPage(props: Props) {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "",
+      name: "",
       password: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    console.log(values);
-    router.push("/dashboard");
-  }
+  const handleSubmit = async (data: any) => {
+    console.log(data);
+
+    try{
+        const url = `${baseUrl}/m1/4770610-0-default/login`
+        const {name,password} = data;
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'json',
+            },
+            body: JSON.stringify({name,password}),
+        };
+
+        const response = await fetch(url,requestOptions);
+        if(!response.ok){
+            throw new Error(`Error! status:${response.status}`)
+        }
+
+        const responseData = await response.json();
+        console.log("send success!");
+        console.log(responseData);
+        //router.push("/dashboard");
+    }catch(error){
+        console.log("Error!",error);
+    }
+}
+
+  // function onSubmit(values: z.infer<typeof formSchema>) {
+  //   // Do something with the form values.
+  //   // ✅ This will be type-safe and validated.
+  //   console.log(values);
+  //   router.push("/dashboard");
+  // }
 
   return (
     <>
-      <PersonStandingIcon size={50} />
+      <FolderKanbanIcon size={50} />
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Login</CardTitle>
-          <CardDescription>Login to your SupportMe accout</CardDescription>
+          <CardDescription>Login to your Just-Dev accout</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit(onSubmit)}
+              onSubmit={form.handleSubmit(handleSubmit)}
               className="flex flex-col gap-4"
             >
               <FormField
                 control={form.control}
-                name="email"
+                name="name"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input placeholder="marry@ao.com" {...field} />
+                      <Input placeholder="UserName" {...field} />
                     </FormControl>
                     <FormDescription>
-                      This is the email address you signed up to SupportMe with.
+                      This is the name you signed up to Just-Dev with.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
